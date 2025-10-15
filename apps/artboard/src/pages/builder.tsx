@@ -47,13 +47,27 @@ export const BuilderLayout = () => {
   return (
     <TransformWrapper
       ref={transformRef}
-      centerOnInit
       maxScale={2}
       minScale={0.4}
       initialScale={0.8}
       limitToBounds={false}
       wheel={{ wheelDisabled: wheelPanning }}
       panning={{ wheelPanning: wheelPanning }}
+      onInit={(ref) => {
+        const { instance, state } = ref;
+        const { wrapperComponent, contentComponent } = instance;
+
+        if (wrapperComponent && contentComponent) {
+          const { offsetWidth: wrapperWidth, offsetHeight: wrapperHeight } = wrapperComponent;
+          const { offsetWidth: contentWidth, offsetHeight: contentHeight } = contentComponent;
+          const { scale } = state;
+
+          const positionX = wrapperWidth - contentWidth * scale;
+          const positionY = (wrapperHeight - contentHeight * scale) / 2;
+
+          ref.setTransform(positionX, positionY, scale, 0);
+        }
+      }}
     >
       <TransformComponent
         wrapperClass="!w-screen !h-screen"

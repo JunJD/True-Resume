@@ -7,8 +7,15 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
+    "Artboard",
     "Browserless",
+    "copilotkit",
+    "healthcheck",
+    "isready",
     "Lingui",
-    "pgsql"
+    "onblack",
+    "paralleldrive",
+    "pgsql",
+    "unlocalized"
   ]
 }

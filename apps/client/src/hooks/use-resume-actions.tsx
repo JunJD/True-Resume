@@ -1,0 +1,249 @@
+/* eslint-disable lingui/no-unlocalized-strings */
+import { useCopilotAction } from "@copilotkit/react-core";
+import type { Experience, Project } from "@reactive-resume/schema";
+
+import { ChangeApprovalCard } from "@/client/components/change-approval-card";
+
+import { useResumeStore } from "../stores/resume";
+
+export const useResumeActions = () => {
+  const resume = useResumeStore((state) => state.resume);
+
+  // Update Summary Action
+  useCopilotAction({
+    name: "updateSummary",
+    description:
+      "Update the resume summary/objective section with improved or new content. Use this to enhance the professional summary.",
+    parameters: [
+      {
+        name: "newSummary",
+        type: "string",
+        description: "The new or improved summary content in HTML format",
+        required: true,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Brief explanation of why this change improves the resume",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const oldSummary = resume.data.sections.summary.content;
+      return (
+        <ChangeApprovalCard
+          sectionKey="summary"
+          action="update"
+          oldValue={oldSummary}
+          newValue={args.newSummary}
+          description={args.reason ?? "Updated summary section"}
+          respond={respond}
+        />
+      );
+    },
+  });
+
+  // Add Experience Action
+  useCopilotAction({
+    name: "addExperience",
+    description: "Add a new work experience entry to the resume.",
+    parameters: [
+      { name: "company", type: "string", description: "Company name", required: true },
+      { name: "position", type: "string", description: "Job title/position", required: true },
+      { name: "location", type: "string", description: "Location of the job", required: false },
+      {
+        name: "date",
+        type: "string",
+        description: "Date range (e.g., 'Jan 2020 - Present')",
+        required: false,
+      },
+      {
+        name: "summary",
+        type: "string",
+        description: "HTML formatted description of responsibilities and achievements",
+        required: true,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Brief explanation of why this addition is valuable",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const newExperience: Partial<Experience> = {
+        company: args.company,
+        position: args.position,
+        location: args.location ?? "",
+        date: args.date ?? "",
+        summary: args.summary,
+        visible: true,
+      };
+      return (
+        <ChangeApprovalCard
+          sectionKey="experience"
+          action="add"
+          oldValue={null}
+          newValue={newExperience}
+          description={args.reason ?? `Add experience at ${args.company}`}
+          respond={respond}
+        />
+      );
+    },
+  });
+
+  // Update Experience Action
+  useCopilotAction({
+    name: "updateExperience",
+    description:
+      "Update an existing work experience entry in the resume. You should identify the experience by company name and position.",
+    parameters: [
+      {
+        name: "experienceId",
+        type: "string",
+        description: "The ID of the experience item to update. Find this from the readable state.",
+        required: true,
+      },
+      {
+        name: "updates",
+        type: "object",
+        description:
+          "Object containing fields to update (company, position, location, date, summary)",
+        required: true,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Brief explanation of the improvement",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const experiences = resume.data.sections.experience.items;
+      const oldExperience = experiences.find((exp) => exp.id === args.experienceId);
+      if (!oldExperience) {
+        return (
+          <div className="text-sm text-foreground/70">
+            Experience with ID {String(args.experienceId)} not found.
+          </div>
+        );
+      }
+      const newExperience = { ...oldExperience, ...args.updates } as Experience;
+      return (
+        <ChangeApprovalCard
+          sectionKey="experience"
+          action="update"
+          oldValue={oldExperience}
+          newValue={newExperience}
+          description={args.reason ?? `Update experience at ${oldExperience.company}`}
+          respond={respond}
+        />
+      );
+    },
+  });
+
+  // Add Project Action
+  useCopilotAction({
+    name: "addProject",
+    description: "Add a new project entry to the resume.",
+    parameters: [
+      { name: "name", type: "string", description: "Project name", required: true },
+      {
+        name: "description",
+        type: "string",
+        description: "Brief project description",
+        required: true,
+      },
+      { name: "date", type: "string", description: "Project date or date range", required: false },
+      {
+        name: "summary",
+        type: "string",
+        description: "HTML formatted detailed description of the project and achievements",
+        required: true,
+      },
+      {
+        name: "keywords",
+        type: "object",
+        description: "Array of technology or skill keywords",
+        required: false,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Brief explanation of why this project is valuable",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const newProject: Partial<Project> = {
+        name: args.name,
+        description: args.description,
+        date: args.date ?? "",
+        summary: args.summary,
+        keywords: (args.keywords as string[] | undefined) ?? [],
+        visible: true,
+      };
+      return (
+        <ChangeApprovalCard
+          sectionKey="projects"
+          action="add"
+          oldValue={null}
+          newValue={newProject}
+          description={args.reason ?? `Add project: ${args.name}`}
+          respond={respond}
+        />
+      );
+    },
+  });
+
+  // Update Project Action
+  useCopilotAction({
+    name: "updateProject",
+    description: "Update an existing project entry in the resume.",
+    parameters: [
+      {
+        name: "projectId",
+        type: "string",
+        description: "The ID of the project item to update",
+        required: true,
+      },
+      {
+        name: "updates",
+        type: "object",
+        description:
+          "Object containing fields to update (name, description, date, summary, keywords)",
+        required: true,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Brief explanation of the improvement",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const projects = resume.data.sections.projects.items;
+      const oldProject = projects.find((proj) => proj.id === args.projectId);
+      if (!oldProject) {
+        return (
+          <div className="text-sm text-foreground/70">
+            Project with ID {String(args.projectId)} not found.
+          </div>
+        );
+      }
+      const newProject = { ...oldProject, ...args.updates } as Project;
+      return (
+        <ChangeApprovalCard
+          sectionKey="projects"
+          action="update"
+          oldValue={oldProject}
+          newValue={newProject}
+          description={args.reason ?? `Update project: ${oldProject.name}`}
+          respond={respond}
+        />
+      );
+    },
+  });
+
+  // Skills actions intentionally left unchanged per current scope
+};

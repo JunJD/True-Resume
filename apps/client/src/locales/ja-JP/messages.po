@@ -121,6 +121,10 @@ msgstr "セクションを追加"
 msgid "Add New Page"
 msgstr "ページを追加"
 
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:105
+msgid "AgentMode"
+msgstr ""
+
 #: apps/client/src/components/ai-actions.tsx:79
 msgid "AI"
 msgstr "AI"
@@ -421,7 +425,7 @@ msgstr "日付または日付の範囲"
 
 #: apps/client/src/pages/builder/sidebars/left/sections/shared/section-dialog.tsx:137
 #: apps/client/src/pages/dashboard/resumes/_dialogs/resume.tsx:158
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:121
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:129
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:127
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:172
 msgid "Delete"
@@ -501,7 +505,7 @@ msgstr "ダウンロード"
 
 #: apps/client/src/pages/builder/sidebars/left/sections/shared/section-dialog.tsx:181
 #: apps/client/src/pages/dashboard/resumes/_dialogs/resume.tsx:246
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:105
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:113
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:95
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:156
 msgid "Duplicate"
@@ -580,6 +584,10 @@ msgstr "Reactive Resume で利用可能なテンプレートを探索し、作�
 #: apps/client/src/pages/builder/sidebars/right/sections/export.tsx:40
 msgid "Export"
 msgstr "輸出"
+
+#: apps/client/src/components/agent-ui/make-user-message.tsx:21
+msgid "Failed to copy to clipboard."
+msgstr ""
 
 #: apps/client/src/pages/dashboard/resumes/_dialogs/import.tsx:255
 msgid "File"
@@ -856,7 +864,7 @@ msgstr "ラベル"
 msgid "Language"
 msgstr "言語"
 
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:83
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:87
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:139
 msgid "Last updated {lastUpdated}"
 msgstr "最終更新 {lastUpdated}"
@@ -913,7 +921,7 @@ msgid "Location"
 msgstr "場所"
 
 #: apps/client/src/pages/dashboard/resumes/_dialogs/lock.tsx:51
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:115
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:123
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:115
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:166
 msgid "Lock"
@@ -1029,7 +1037,7 @@ msgstr "ワンタイムパスワード"
 msgid "Oops, the server returned an error."
 msgstr "サーバーがエラーを返しました。"
 
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:97
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:101
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:77
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:148
 msgid "Open"
@@ -1176,6 +1184,7 @@ msgid "Raise an issue"
 msgstr "課題を上げる"
 
 #: apps/client/src/components/copyright.tsx:35
+#: apps/client/src/pages/agent/page.tsx:60
 #: apps/client/src/pages/auth/backup-otp/page.tsx:52
 #: apps/client/src/pages/auth/forgot-password/page.tsx:49
 #: apps/client/src/pages/auth/login/page.tsx:55
@@ -1223,7 +1232,7 @@ msgid "Remove Page"
 msgstr "ページを削除"
 
 #: apps/client/src/pages/builder/sidebars/left/sections/shared/section-options.tsx:111
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:101
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:109
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:86
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:152
 msgid "Rename"
@@ -1335,6 +1344,10 @@ msgstr "メールを送信"
 #: apps/client/src/pages/builder/sidebars/right/sections/information.tsx:79
 msgid "Send me a message"
 msgstr "メッセージを送る"
+
+#: apps/client/src/components/agent-ui/make-input.tsx:147
+msgid "Send message"
+msgstr ""
 
 #: apps/client/src/pages/builder/sidebars/left/sections/shared/section-options.tsx:97
 msgid "Separate Links"
@@ -1455,6 +1468,10 @@ msgstr "統計情報"
 #: apps/client/src/pages/builder/sidebars/right/sections/statistics.tsx:38
 msgid "Statistics are available only for public resumes."
 msgstr "統計は公開履歴書に対してのみ利用可能です。"
+
+#: apps/client/src/components/agent-ui/make-input.tsx:130
+msgid "Stop generation"
+msgstr ""
 
 #: apps/client/src/pages/dashboard/settings/_dialogs/two-factor.tsx:162
 msgid "Store your backup codes securely"
@@ -1582,6 +1599,14 @@ msgstr "ページ番号の切り替え"
 msgid "Track views and downloads"
 msgstr "ビューとダウンロードを追跡する"
 
+#: apps/client/src/components/agent-ui/make-assistant-message.tsx:79
+msgid "Trues 将在你回复后与你继续对话"
+msgstr ""
+
+#: apps/client/src/components/agent-ui/make-assistant-message.tsx:16
+msgid "Trues 正在思考"
+msgstr ""
+
 #: apps/client/src/pages/auth/verify-otp/page.tsx:52
 #: apps/client/src/pages/auth/verify-otp/page.tsx:57
 #: apps/client/src/pages/dashboard/settings/_sections/security.tsx:129
@@ -1620,7 +1645,7 @@ msgid "Undo"
 msgstr "元に戻す"
 
 #: apps/client/src/pages/dashboard/resumes/_dialogs/lock.tsx:52
-#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:110
+#: apps/client/src/pages/dashboard/resumes/_layouts/grid/_components/resume-card.tsx:118
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:105
 #: apps/client/src/pages/dashboard/resumes/_layouts/list/_components/resume-item.tsx:161
 msgid "Unlock"
@@ -1819,4 +1844,3 @@ msgstr "拡大"
 #: apps/client/src/pages/builder/_components/toolbar.tsx:118
 msgid "Zoom Out"
 msgstr "ズームアウト"
-

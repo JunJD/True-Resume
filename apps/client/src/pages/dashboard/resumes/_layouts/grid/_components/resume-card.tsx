@@ -36,6 +36,10 @@ export const ResumeCard = ({ resume }: Props) => {
   const template = resume.data.metadata.template;
   const lastUpdated = dayjs().to(resume.updatedAt);
 
+  const onOpenAgentMode = () => {
+    void navigate(`/agent/${resume.id}`);
+  };
+
   const onOpen = () => {
     void navigate(`/builder/${resume.id}`);
   };
@@ -95,6 +99,10 @@ export const ResumeCard = ({ resume }: Props) => {
         <DropdownMenuItem onClick={onOpen}>
           <FolderOpenIcon size={14} className="mr-2" />
           {t`Open`}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onOpenAgentMode}>
+          <FolderOpenIcon size={14} className="mr-2" />
+          {t`AgentMode`}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onUpdate}>
           <PencilSimpleIcon size={14} className="mr-2" />

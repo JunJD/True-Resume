@@ -1,5 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router";
 
+import { AgentLayout } from "../pages/agent/layout";
+import { AgentPage } from "../pages/agent/page";
 import { BackupOtpPage } from "../pages/auth/backup-otp/page";
 import { ForgotPasswordPage } from "../pages/auth/forgot-password/page";
 import { AuthLayout } from "../pages/auth/layout";
@@ -67,6 +69,16 @@ export const routes = createRoutesFromElements(
             <Route path="settings" element={<SettingsPage />} />
 
             <Route index element={<Navigate replace to="/dashboard/resumes" />} />
+          </Route>
+        </Route>
+      </Route>
+
+      <Route path="agent">
+        <Route element={<AuthGuard />}>
+          <Route element={<AgentLayout />}>
+            <Route path=":id" loader={builderLoader} element={<AgentPage />} />
+
+            <Route index element={<Navigate replace to="/agent/resumes" />} />
           </Route>
         </Route>
       </Route>

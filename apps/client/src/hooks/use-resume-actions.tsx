@@ -105,11 +105,40 @@ export const useResumeActions = () => {
         required: true,
       },
       {
-        name: "updates",
+        name: "company",
+        type: "string",
+        description: "Updated company name",
+        required: false,
+      },
+      {
+        name: "position",
+        type: "string",
+        description: "Updated job title/position",
+        required: false,
+      },
+      {
+        name: "location",
+        type: "string",
+        description: "Updated location",
+        required: false,
+      },
+      {
+        name: "date",
+        type: "string",
+        description: "Updated date range (e.g., 'Jan 2020 - Present')",
+        required: false,
+      },
+      {
+        name: "summary",
+        type: "string",
+        description: "Updated HTML formatted description of responsibilities and achievements",
+        required: false,
+      },
+      {
+        name: "url",
         type: "object",
-        description:
-          "Object containing fields to update (company, position, location, date, summary)",
-        required: true,
+        description: "Updated URL object with label and href properties",
+        required: false,
       },
       {
         name: "reason",
@@ -128,7 +157,17 @@ export const useResumeActions = () => {
           </div>
         );
       }
-      const newExperience = { ...oldExperience, ...args.updates } as Experience;
+
+      // Build updates object from individual fields
+      const updates: Partial<Experience> = {};
+      if (args.company !== undefined) updates.company = args.company;
+      if (args.position !== undefined) updates.position = args.position;
+      if (args.location !== undefined) updates.location = args.location;
+      if (args.date !== undefined) updates.date = args.date;
+      if (args.summary !== undefined) updates.summary = args.summary;
+      if (args.url !== undefined) updates.url = args.url as { label: string; href: string };
+
+      const newExperience = { ...oldExperience, ...updates } as Experience;
       return (
         <ChangeApprovalCard
           sectionKey="experience"
@@ -208,11 +247,40 @@ export const useResumeActions = () => {
         required: true,
       },
       {
-        name: "updates",
+        name: "name",
+        type: "string",
+        description: "Updated project name",
+        required: false,
+      },
+      {
+        name: "description",
+        type: "string",
+        description: "Updated brief project description",
+        required: false,
+      },
+      {
+        name: "date",
+        type: "string",
+        description: "Updated project date or date range",
+        required: false,
+      },
+      {
+        name: "summary",
+        type: "string",
+        description: "Updated HTML formatted detailed description",
+        required: false,
+      },
+      {
+        name: "keywords",
         type: "object",
-        description:
-          "Object containing fields to update (name, description, date, summary, keywords)",
-        required: true,
+        description: "Updated array of technology or skill keywords",
+        required: false,
+      },
+      {
+        name: "url",
+        type: "object",
+        description: "Updated URL object with label and href properties",
+        required: false,
       },
       {
         name: "reason",
@@ -231,7 +299,17 @@ export const useResumeActions = () => {
           </div>
         );
       }
-      const newProject = { ...oldProject, ...args.updates } as Project;
+
+      // Build updates object from individual fields
+      const updates: Partial<Project> = {};
+      if (args.name !== undefined) updates.name = args.name;
+      if (args.description !== undefined) updates.description = args.description;
+      if (args.date !== undefined) updates.date = args.date;
+      if (args.summary !== undefined) updates.summary = args.summary;
+      if (args.keywords !== undefined) updates.keywords = args.keywords as string[];
+      if (args.url !== undefined) updates.url = args.url as { label: string; href: string };
+
+      const newProject = { ...oldProject, ...updates } as Project;
       return (
         <ChangeApprovalCard
           sectionKey="projects"

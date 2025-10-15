@@ -10,6 +10,7 @@ export const MakeAssistantMessage: React.FC<AssistantMessageProps> = (props) => 
   return (
     <div>
       <Logo />
+      {message?.generativeUI?.()}
       {isLoading ? (
         <div className="flex items-center gap-1 text-sm text-[var(--text-tertiary)]">
           <span>
@@ -50,7 +51,6 @@ export const MakeAssistantMessage: React.FC<AssistantMessageProps> = (props) => 
           {message?.content && (
             <Streamdown isAnimating={isGenerating}>{message.content}</Streamdown>
           )}
-          {message?.generativeUI?.()}
           {!isGenerating && isCurrentMessage && (
             <div className="flex items-center gap-[6px] py-1.5 text-sm font-[500] text-[var(--function-warning)]">
               <svg

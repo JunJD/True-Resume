@@ -82,7 +82,7 @@ export const MakeInput: React.FC<InputProps> = (props) => {
   return (
     <div
       className={cn(
-        "w-full rounded-2xl border p-4 transition-all duration-500",
+        "m-2 rounded-2xl border p-4 transition-all duration-500",
         "border-gray-200 bg-white shadow-[0px_2px_3px_rgba(0,0,0,0.05)]",
         "hover:shadow-[0px_4px_6px_rgba(0,0,0,0.08)]",
         "dark:border-gray-700 dark:bg-gray-800",

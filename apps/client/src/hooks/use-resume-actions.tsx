@@ -30,7 +30,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const oldSummary = resume.data.sections.summary.content;
       return (
         <ChangeApprovalCard
@@ -40,6 +40,7 @@ export const useResumeActions = () => {
           newValue={args.newSummary}
           description={args.reason ?? "Updated summary section"}
           respond={respond}
+          status={status}
         />
       );
     },
@@ -72,7 +73,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const newExperience: Partial<Experience> = {
         company: args.company,
         position: args.position,
@@ -89,6 +90,7 @@ export const useResumeActions = () => {
           newValue={newExperience}
           description={args.reason ?? `Add experience at ${args.company}`}
           respond={respond}
+          status={status}
         />
       );
     },
@@ -149,7 +151,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const experiences = resume.data.sections.experience.items;
       const oldExperience = experiences.find((exp) => exp.id === args.experienceId);
       if (!oldExperience) {
@@ -178,6 +180,7 @@ export const useResumeActions = () => {
           newValue={newExperience}
           description={args.reason ?? `Update experience at ${oldExperience.company}`}
           respond={respond}
+          status={status}
         />
       );
     },
@@ -215,7 +218,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const newProject: Partial<Project> = {
         name: args.name,
         description: args.description,
@@ -232,6 +235,7 @@ export const useResumeActions = () => {
           newValue={newProject}
           description={args.reason ?? `Add project: ${args.name}`}
           respond={respond}
+          status={status}
         />
       );
     },
@@ -291,7 +295,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const projects = resume.data.sections.projects.items;
       const oldProject = projects.find((proj) => proj.id === args.projectId);
       if (!oldProject) {
@@ -320,6 +324,7 @@ export const useResumeActions = () => {
           newValue={newProject}
           description={args.reason ?? `Update project: ${oldProject.name}`}
           respond={respond}
+          status={status}
         />
       );
     },

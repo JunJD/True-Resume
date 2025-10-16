@@ -1,12 +1,11 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { createId } from "@paralleldrive/cuid2";
-import { CheckIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, CircleNotchIcon, XIcon } from "@phosphor-icons/react";
 import type { Experience, Project, Skill } from "@reactive-resume/schema";
 import { Button } from "@reactive-resume/ui";
 import { cn } from "@reactive-resume/utils";
 import { motion } from "framer-motion";
 import { produce } from "immer";
-import { useState } from "react";
 
 import { useResumeStore } from "@/client/stores/resume";
 
@@ -19,6 +18,7 @@ type ChangeApprovalCardProps = {
   newValue: unknown;
   description?: string;
   respond: ((result: { status: string }) => void) | undefined;
+  status?: "inProgress" | "executing" | "complete";
 };
 
 export const ChangeApprovalCard = ({
@@ -28,9 +28,9 @@ export const ChangeApprovalCard = ({
   newValue,
   description,
   respond,
+  status = "inProgress",
 }: ChangeApprovalCardProps) => {
   const setValue = useResumeStore((state) => state.setValue);
-  const [status, setStatus] = useState<"pending" | "accepted" | "rejected">("pending");
 
   const applyChange = () => {
     switch (sectionKey) {
@@ -155,18 +155,12 @@ export const ChangeApprovalCard = ({
   };
 
   const handleAccept = () => {
-    setStatus("accepted");
     applyChange();
-    setTimeout(() => {
-      respond?.({ status: "accepted" });
-    }, 800);
+    respond?.({ status: "accepted" });
   };
 
   const handleReject = () => {
-    setStatus("rejected");
-    setTimeout(() => {
-      respond?.({ status: "rejected" });
-    }, 500);
+    respond?.({ status: "rejected" });
   };
 
   return (
@@ -178,37 +172,36 @@ export const ChangeApprovalCard = ({
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       className={cn(
         "my-3 overflow-hidden rounded-lg border shadow-sm backdrop-blur-sm transition-all duration-300",
-        status === "pending" && "border-border/60 bg-secondary/30",
-        status === "accepted" && "border-green-500/50 bg-green-500/10",
-        status === "rejected" && "border-red-500/50 bg-red-500/10",
+        status === "inProgress" && "border-border/60 bg-secondary/30",
+        status === "executing" && "border-border/60 bg-secondary/30",
+        status === "complete" && "border-green-500/50 bg-green-500/10",
       )}
     >
       <div
         className={cn(
           "flex items-center justify-between border-b px-4 py-2.5 transition-colors duration-300",
-          status === "pending" && "border-border/40 bg-background/50",
-          status === "accepted" && "border-green-500/30 bg-green-500/5",
-          status === "rejected" && "border-red-500/30 bg-red-500/5",
+          status === "inProgress" && "border-border/40 bg-background/50",
+          status === "executing" && "border-border/40 bg-background/50",
+          status === "complete" && "border-green-500/30 bg-green-500/5",
         )}
       >
         <div className="flex items-center gap-2">
           <span
             className={cn(
               "rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ring-1 transition-all duration-300",
-              status === "pending" && "bg-primary/10 text-primary-foreground/80 ring-primary/20",
-              status === "accepted" &&
+              (status === "inProgress" || status === "executing") &&
+                "bg-primary/10 text-primary-foreground/80 ring-primary/20",
+              status === "complete" &&
                 "bg-green-500/20 text-green-700 ring-green-500/40 dark:text-green-400",
-              status === "rejected" &&
-                "bg-red-500/20 text-red-700 ring-red-500/40 dark:text-red-400",
             )}
           >
-            {status === "pending" && action}
-            {status === "accepted" && "Applied"}
-            {status === "rejected" && "Rejected"}
+            {status === "executing" && action}
+            {status === "inProgress" && "Applying"}
+            {status === "complete" && "Applied"}
           </span>
           <span className="text-sm font-medium capitalize text-foreground">{sectionKey}</span>
         </div>
-        {status === "accepted" && (
+        {status === "complete" && (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -217,24 +210,16 @@ export const ChangeApprovalCard = ({
             <CheckIcon className="size-5 text-green-600 dark:text-green-400" weight="bold" />
           </motion.div>
         )}
-        {status === "rejected" && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
-            <XIcon className="size-5 text-red-600 dark:text-red-400" weight="bold" />
-          </motion.div>
-        )}
+        {status === "inProgress" && <CircleNotchIcon className="size-5 animate-spin" />}
       </div>
 
-      {description && status === "pending" && (
+      {description && status === "executing" && (
         <div className="border-b border-border/40 bg-background/30 px-4 py-2">
           <p className="text-sm text-foreground/60">{description}</p>
         </div>
       )}
 
-      {status === "pending" && (
+      {status === "executing" && (
         <div className="p-4">
           <DiffViewer
             oldValue={oldValue}
@@ -245,7 +230,7 @@ export const ChangeApprovalCard = ({
         </div>
       )}
 
-      {status === "pending" && (
+      {status === "executing" && (
         <div className="flex gap-2 border-t border-border/40 bg-background/40 p-3">
           <Button
             size="sm"
@@ -267,17 +252,11 @@ export const ChangeApprovalCard = ({
         </div>
       )}
 
-      {status === "accepted" && (
+      {status === "complete" && (
         <div className="px-4 py-3">
           <p className="text-sm font-medium text-green-700 dark:text-green-400">
             ✓ Change applied successfully
           </p>
-        </div>
-      )}
-
-      {status === "rejected" && (
-        <div className="px-4 py-3">
-          <p className="text-sm font-medium text-red-700 dark:text-red-400">✗ Change rejected</p>
         </div>
       )}
     </motion.div>

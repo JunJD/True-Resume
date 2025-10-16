@@ -1,5 +1,5 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { CheckIcon } from "@phosphor-icons/react";
+import { CheckIcon, CircleNotchIcon } from "@phosphor-icons/react";
 import { Button } from "@reactive-resume/ui";
 import { cn, type Template, templatesList } from "@reactive-resume/utils";
 import { motion } from "framer-motion";
@@ -12,6 +12,7 @@ type TemplateSelectorProps = {
   suggestedTemplate: Template;
   reason?: string;
   respond: ((result: { status: string; template?: Template }) => void) | undefined;
+  status?: "inProgress" | "executing" | "complete";
 };
 
 // Template display names for better UX
@@ -35,22 +36,19 @@ export const TemplateSelector = ({
   suggestedTemplate,
   reason,
   respond,
+  status = "executing",
 }: TemplateSelectorProps) => {
   const setValue = useResumeStore((state) => state.setValue);
   const [selectedTemplate, setSelectedTemplate] = useState<Template>(suggestedTemplate);
-  const [status, setStatus] = useState<"pending" | "confirmed">("pending");
 
   const handleTemplateSelect = (template: Template) => {
-    if (status === "confirmed") return;
+    if (status !== "executing") return;
     setSelectedTemplate(template);
-    setValue("metadata.template", template);
   };
 
   const handleConfirm = () => {
-    setStatus("confirmed");
-    setTimeout(() => {
-      respond?.({ status: "accepted", template: selectedTemplate });
-    }, 500);
+    setValue("metadata.template", selectedTemplate);
+    respond?.({ status: "accepted", template: selectedTemplate });
   };
 
   return (
@@ -62,32 +60,36 @@ export const TemplateSelector = ({
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       className={cn(
         "my-3 overflow-hidden rounded-lg border shadow-sm backdrop-blur-sm transition-all duration-300",
-        status === "pending" && "border-border/60 bg-secondary/30",
-        status === "confirmed" && "border-green-500/50 bg-green-500/10",
+        status === "executing" && "border-border/60 bg-secondary/30",
+        status === "inProgress" && "border-border/60 bg-secondary/30",
+        status === "complete" && "border-green-500/50 bg-green-500/10",
       )}
     >
       <div
         className={cn(
           "flex items-center justify-between border-b px-4 py-2.5 transition-colors duration-300",
-          status === "pending" && "border-border/40 bg-background/50",
-          status === "confirmed" && "border-green-500/30 bg-green-500/5",
+          status === "executing" && "border-border/40 bg-background/50",
+          status === "inProgress" && "border-border/40 bg-background/50",
+          status === "complete" && "border-green-500/30 bg-green-500/5",
         )}
       >
         <div className="flex items-center gap-2">
           <span
             className={cn(
               "rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ring-1 transition-all duration-300",
-              status === "pending" && "bg-primary/10 text-primary-foreground/80 ring-primary/20",
-              status === "confirmed" &&
+              (status === "executing" || status === "inProgress") &&
+                "bg-primary/10 text-primary-foreground/80 ring-primary/20",
+              status === "complete" &&
                 "bg-green-500/20 text-green-700 ring-green-500/40 dark:text-green-400",
             )}
           >
-            {status === "pending" && "Change"}
-            {status === "confirmed" && "Confirmed"}
+            {status === "executing" && "Change"}
+            {status === "inProgress" && "Applying"}
+            {status === "complete" && "Confirmed"}
           </span>
           <span className="text-sm font-medium capitalize text-foreground">Template</span>
         </div>
-        {status === "confirmed" && (
+        {status === "complete" && (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -96,15 +98,16 @@ export const TemplateSelector = ({
             <CheckIcon className="size-5 text-green-600 dark:text-green-400" weight="bold" />
           </motion.div>
         )}
+        {status === "inProgress" && <CircleNotchIcon className="size-5 animate-spin" />}
       </div>
 
-      {reason && status === "pending" && (
+      {reason && status === "executing" && (
         <div className="border-b border-border/40 bg-background/30 px-4 py-2">
           <p className="text-sm text-foreground/60">{reason}</p>
         </div>
       )}
 
-      {status === "pending" && (
+      {status === "executing" && (
         <div className="p-4">
           <div className="mb-2 flex items-center justify-between text-xs text-foreground/60">
             <span>
@@ -125,7 +128,7 @@ export const TemplateSelector = ({
                   "group relative cursor-pointer rounded-lg border-2 transition-all duration-200",
                   "hover:scale-105 hover:shadow-lg",
                   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                  status === "pending" ? "cursor-pointer" : "cursor-not-allowed",
+                  status === "executing" ? "cursor-pointer" : "cursor-not-allowed",
                   selectedTemplate === template
                     ? "border-primary shadow-lg"
                     : "border-transparent hover:border-primary/50",
@@ -161,7 +164,7 @@ export const TemplateSelector = ({
         </div>
       )}
 
-      {status === "pending" && (
+      {status === "executing" && (
         <div className="flex gap-2 border-t border-border/40 bg-background/40 p-3">
           <Button
             size="sm"
@@ -174,7 +177,7 @@ export const TemplateSelector = ({
         </div>
       )}
 
-      {status === "confirmed" && (
+      {status === "complete" && (
         <div className="px-4 py-3">
           <p className="text-sm font-medium text-green-700 dark:text-green-400">
             ✓ Template changed to {templateDisplayNames[selectedTemplate]}

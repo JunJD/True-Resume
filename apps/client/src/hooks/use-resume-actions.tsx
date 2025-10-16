@@ -350,7 +350,7 @@ export const useResumeActions = () => {
         required: false,
       },
     ],
-    renderAndWaitForResponse: ({ args, respond }) => {
+    renderAndWaitForResponse: ({ args, respond, status }) => {
       const currentTemplate = resume.data.metadata.template as Template;
       // If AI doesn't suggest a template, default to current template and let user choose from UI
       const suggestedTemplate = args.template ?? currentTemplate;
@@ -360,6 +360,7 @@ export const useResumeActions = () => {
           suggestedTemplate={suggestedTemplate}
           reason={args.reason}
           respond={respond}
+          status={status}
         />
       );
     },

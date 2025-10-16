@@ -124,6 +124,7 @@ export const TemplateSelector = ({
                 className={cn(
                   "group relative cursor-pointer rounded-lg border-2 transition-all duration-200",
                   "hover:scale-105 hover:shadow-lg",
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                   status === "pending" ? "cursor-pointer" : "cursor-not-allowed",
                   selectedTemplate === template
                     ? "border-primary shadow-lg"

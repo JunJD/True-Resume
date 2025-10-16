@@ -352,7 +352,6 @@ export const useResumeActions = () => {
     ],
     renderAndWaitForResponse: ({ args, respond, status }) => {
       const currentTemplate = resume.data.metadata.template as Template;
-      // If AI doesn't suggest a template, default to current template and let user choose from UI
       const suggestedTemplate = args.template ?? currentTemplate;
       return (
         <TemplateSelector

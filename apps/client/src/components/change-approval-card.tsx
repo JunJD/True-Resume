@@ -219,7 +219,7 @@ export const ChangeApprovalCard = ({
         </div>
       )}
 
-      {status === "executing" && (
+      {status !== "complete" && (
         <div className="p-4">
           <DiffViewer
             oldValue={oldValue}

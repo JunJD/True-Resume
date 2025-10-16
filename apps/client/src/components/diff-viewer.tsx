@@ -1,6 +1,7 @@
-/* eslint-disable lingui/no-unlocalized-strings */
-import { motion } from "framer-motion";
+/* eslint-disable lingui/no-unlocalized-strings, import/order, sort-imports, simple-import-sort/imports */
 import { useMemo } from "react";
+import { motion } from "framer-motion";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 
 type DiffViewerProps = {
   oldValue: unknown;
@@ -10,78 +11,23 @@ type DiffViewerProps = {
 };
 
 export const DiffViewer = ({ oldValue, newValue, sectionKey, action }: DiffViewerProps) => {
-  const renderDiff = useMemo(() => {
+  const { oldText, newText } = useMemo(() => {
     if (action === "add") {
-      return (
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-green-600 dark:text-green-400">
-            + New {sectionKey} entry
-          </div>
-          <div className="rounded-md bg-green-50 p-3 dark:bg-green-900/20">
-            {renderValue(newValue, sectionKey)}
-          </div>
-        </div>
-      );
+      return {
+        oldText: "",
+        newText: serializeForDiff(newValue, sectionKey),
+      };
     }
-
     if (action === "delete") {
-      return (
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-red-600 dark:text-red-400">
-            - Remove {sectionKey} entry
-          </div>
-          <div className="rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-            {renderValue(oldValue, sectionKey)}
-          </div>
-        </div>
-      );
+      return {
+        oldText: serializeForDiff(oldValue, sectionKey),
+        newText: "",
+      };
     }
-
-    // Update action
-    if (sectionKey === "summary") {
-      return (
-        <div className="space-y-3">
-          <div>
-            <div className="mb-1 text-sm font-medium text-red-600 dark:text-red-400">- Old</div>
-            <div className="rounded-md bg-red-50 p-3 text-sm dark:bg-red-900/20">
-              <div
-                dangerouslySetInnerHTML={{ __html: (oldValue as string | undefined) ?? "(empty)" }}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="mb-1 text-sm font-medium text-green-600 dark:text-green-400">+ New</div>
-            <div className="rounded-md bg-green-50 p-3 text-sm dark:bg-green-900/20">
-              <div
-                dangerouslySetInnerHTML={{ __html: (newValue as string | undefined) ?? "(empty)" }}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // For structured items (experience, projects, skills)
-    if (sectionKey === "experience" || sectionKey === "projects" || sectionKey === "skills") {
-      return (
-        <div className="space-y-3">
-          <div>
-            <div className="mb-1 text-sm font-medium text-red-600 dark:text-red-400">- Old</div>
-            <div className="rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-              {renderValue(oldValue, sectionKey)}
-            </div>
-          </div>
-          <div>
-            <div className="mb-1 text-sm font-medium text-green-600 dark:text-green-400">+ New</div>
-            <div className="rounded-md bg-green-50 p-3 dark:bg-green-900/20">
-              {renderValue(newValue, sectionKey)}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return null;
+    return {
+      oldText: serializeForDiff(oldValue, sectionKey),
+      newText: serializeForDiff(newValue, sectionKey),
+    };
   }, [oldValue, newValue, sectionKey, action]);
 
   return (
@@ -92,71 +38,80 @@ export const DiffViewer = ({ oldValue, newValue, sectionKey, action }: DiffViewe
       transition={{ duration: 0.2 }}
       className="overflow-hidden rounded-lg border border-border"
     >
-      {renderDiff}
+      <ReactDiffViewer
+        oldValue={oldText}
+        newValue={newText}
+        splitView={false}
+        compareMethod={DiffMethod.WORDS_WITH_SPACE}
+        disableWordDiff={false}
+        showDiffOnly={false}
+        // pure text diff; no syntax highlight
+        styles={{
+          variables: {
+            light: {
+              diffViewerBackground: "transparent",
+            },
+            dark: {
+              diffViewerBackground: "transparent",
+            },
+          },
+        }}
+      />
     </motion.div>
   );
 };
 
-const renderValue = (value: unknown, sectionKey: string) => {
-  if (!value) return <span className="text-foreground/40">(empty)</span>;
-
+const serializeForDiff = (value: unknown, sectionKey: string) => {
+  if (!value) return "";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const val = value as any;
 
+  if (sectionKey === "summary") {
+    // Treat as HTML/markdown. We can diff as markdown text for readability.
+    return typeof val === "string" ? val : String(val ?? "");
+  }
+
   if (sectionKey === "experience") {
-    return (
-      <div className="space-y-1 text-sm">
-        <div className="font-semibold">{val.position ?? "(no position)"}</div>
-        <div className="text-foreground">{val.company ?? "(no company)"}</div>
-        {val.location && <div className="text-xs">{val.location}</div>}
-        {val.date && <div className="text-xs">{val.date}</div>}
-        {val.summary && (
-          <div dangerouslySetInnerHTML={{ __html: val.summary }} className="mt-2 text-xs" />
-        )}
-      </div>
-    );
+    const lines: string[] = [];
+    if (val.position) lines.push(`# ${val.position}`);
+    if (val.company) lines.push(`Company: ${val.company}`);
+    if (val.location) lines.push(`Location: ${val.location}`);
+    if (val.date) lines.push(`Date: ${val.date}`);
+    if (val.summary) lines.push(`\n${stripHtml(val.summary)}`);
+    return lines.join("\n");
   }
 
   if (sectionKey === "projects") {
-    return (
-      <div className="space-y-1 text-sm">
-        <div className="font-semibold">{val.name ?? "(no name)"}</div>
-        {val.description && <div className="text-xs text-foreground/70">{val.description}</div>}
-        {val.date && <div className="text-xs">{val.date}</div>}
-        {val.summary && (
-          <div dangerouslySetInnerHTML={{ __html: val.summary }} className="mt-2 text-xs" />
-        )}
-        {val.keywords && val.keywords.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {val.keywords.map((keyword: string, idx: number) => (
-              <span key={idx} className="rounded-full bg-secondary px-2 py-0.5 text-xs">
-                {keyword}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-    );
+    const lines: string[] = [];
+    if (val.name) lines.push(`# ${val.name}`);
+    if (val.description) lines.push(val.description);
+    if (val.date) lines.push(`Date: ${val.date}`);
+    if (val.summary) lines.push(`\n${stripHtml(val.summary)}`);
+    if (Array.isArray(val.keywords) && val.keywords.length > 0) {
+      lines.push("\nKeywords:");
+      for (const k of val.keywords) lines.push(`- ${k}`);
+    }
+    return lines.join("\n");
   }
 
   if (sectionKey === "skills") {
-    return (
-      <div className="space-y-1 text-sm">
-        <div className="font-semibold">{val.name ?? "(no name)"}</div>
-        {val.description && <div className="text-xs text-foreground/70">{val.description}</div>}
-        {val.level !== undefined && <div className="text-xs">Level: {val.level}/5</div>}
-        {val.keywords && val.keywords.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {val.keywords.map((keyword: string, idx: number) => (
-              <span key={idx} className="rounded-full bg-secondary px-2 py-0.5 text-xs">
-                {keyword}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-    );
+    const lines: string[] = [];
+    if (val.name) lines.push(`# ${val.name}`);
+    if (val.description) lines.push(val.description);
+    if (val.level !== undefined) lines.push(`Level: ${val.level}/5`);
+    if (Array.isArray(val.keywords) && val.keywords.length > 0) {
+      lines.push("\nKeywords:");
+      for (const k of val.keywords) lines.push(`- ${k}`);
+    }
+    return lines.join("\n");
   }
 
-  return <pre className="text-xs">{JSON.stringify(value, null, 2)}</pre>;
+  return JSON.stringify(value, null, 2);
 };
+
+const stripHtml = (html: string) => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, "");
+};
+
+// No Prism usage; purely textual rendering

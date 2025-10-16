@@ -48,6 +48,9 @@ module.exports = {
       fontFamily: {
         sans: ["IBM Plex Sans", "sans-serif"],
       },
+      height: {
+        "screen-minus-12": "calc(100vh - 3rem)",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

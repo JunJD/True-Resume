@@ -14,6 +14,8 @@ import { useResumeActions } from "@/client/hooks/use-resume-actions";
 import { useResumeCopilot } from "@/client/hooks/use-resume-copilot";
 import { useResumeStore } from "@/client/stores/resume";
 
+import { AgentHeader } from "./_components/header";
+
 export function AgentChat() {
   const resume = useResumeStore((state) => state.resume);
 
@@ -31,15 +33,20 @@ export function AgentChat() {
   );
 
   return (
-    <ScrollArea
-      orientation="vertical"
-      className="relative flex h-screen flex-1 flex-col self-center bg-[var(--background-gray-main)]"
-    >
-      <div className="flex h-screen min-w-0 flex-1 overflow-hidden bg-[var(--background-gray-main)]">
-        <McpServerManager />
-        <CopilotChat
-          className="size-full flex-1 bg-[var(--background-gray-main)]"
-          instructions={`You are a professional resume optimization assistant with expertise in creating compelling, ATS-friendly resumes.
+    <div className="flex h-screen flex-col bg-[var(--background-gray-main)]">
+      {/* Header */}
+      <AgentHeader />
+
+      {/* Chat Area */}
+      <ScrollArea
+        orientation="vertical"
+        className="relative flex flex-1 flex-col self-center bg-[var(--background-gray-main)]"
+      >
+        <div className="flex h-screen-minus-12 min-w-0 flex-1 bg-[var(--background-gray-main)]">
+          <McpServerManager />
+          <CopilotChat
+            className="size-full flex-1 bg-[var(--background-gray-main)]"
+            instructions={`You are a professional resume optimization assistant with expertise in creating compelling, ATS-friendly resumes.
 
 Your capabilities include:
 - Improving summary/objective statements to be more impactful and targeted
@@ -55,18 +62,19 @@ When suggesting changes:
 5. Ensure consistency in formatting and tone
 
 Render a review card for each change with Accept/Reject options, and apply on Accept.`}
-          labels={{
-            title: "Resume Assistant",
-            initial:
-              "Hi! 👋 I'm your resume optimization assistant. I can help you improve your resume's content. What would you like to work on?",
-          }}
-          AssistantMessage={MakeAssistantMessage}
-          Input={MakeInput}
-          UserMessage={MarkUserMessage}
-          RenderSuggestionsList={RenderSuggestionsList}
-        />
-        <ToolRenderer />
-      </div>
-    </ScrollArea>
+            labels={{
+              title: "Resume Assistant",
+              initial:
+                "Hi! 👋 I'm your resume optimization assistant. I can help you improve your resume's content. What would you like to work on?",
+            }}
+            AssistantMessage={MakeAssistantMessage}
+            Input={MakeInput}
+            UserMessage={MarkUserMessage}
+            RenderSuggestionsList={RenderSuggestionsList}
+          />
+          <ToolRenderer />
+        </div>
+      </ScrollArea>
+    </div>
   );
 }

@@ -1,8 +1,10 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import { useCopilotAction } from "@copilotkit/react-core";
 import type { Experience, Project } from "@reactive-resume/schema";
+import { type Template, templatesList } from "@reactive-resume/utils";
 
 import { ChangeApprovalCard } from "@/client/components/change-approval-card";
+import { TemplateSelector } from "@/client/components/template-selector";
 
 import { useResumeStore } from "../stores/resume";
 
@@ -323,5 +325,38 @@ export const useResumeActions = () => {
     },
   });
 
-  // Skills actions intentionally left unchanged per current scope
+  useCopilotAction({
+    name: "changeTemplate",
+    description:
+      "Change the resume template to a different design. Call this whenever user mentions changing, switching, or trying a different template layout. Always use this tool to show the template selector UI instead of describing templates in text.",
+    parameters: [
+      {
+        name: "template",
+        type: "string",
+        description:
+          "Optional: AI suggested template name if user specified which template they want. If user just wants to change template without specifying which one, leave this empty and let them choose from the UI.",
+        enum: [...templatesList],
+        required: false,
+      },
+      {
+        name: "reason",
+        type: "string",
+        description: "Optional: Brief explanation of why the suggested template is better",
+        required: false,
+      },
+    ],
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const currentTemplate = resume.data.metadata.template as Template;
+      // If AI doesn't suggest a template, default to current template and let user choose from UI
+      const suggestedTemplate = args.template ?? currentTemplate;
+      return (
+        <TemplateSelector
+          currentTemplate={currentTemplate}
+          suggestedTemplate={suggestedTemplate}
+          reason={args.reason}
+          respond={respond}
+        />
+      );
+    },
+  });
 };

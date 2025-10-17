@@ -14,34 +14,34 @@ export const MakeAssistantMessage: React.FC<AssistantMessageProps> = (props) => 
       {isLoading ? (
         <div className="flex items-center gap-1 text-sm text-[var(--text-tertiary)]">
           <span>
-            <Trans>Trues 正在思考</Trans>
+            {message?.generativeUI ? <Trans>Trues 正在生成</Trans> : <Trans>Trues 正在思考</Trans>}
           </span>
           <span className="relative top-[4px] flex gap-1">
             <span
               className="animate-bounce-dot rounded bg-[var(--icon-tertiary)]"
               style={{
-                animationDelay: "100ms",
-                width: "6px",
-                height: "6px",
-                animationDuration: "1.5s",
+                animationDelay: "0ms",
+                animationDuration: "1.2s",
+                width: "4px",
+                height: "4px",
               }}
             ></span>
             <span
               className="animate-bounce-dot rounded bg-[var(--icon-tertiary)]"
               style={{
-                animationDelay: "300ms",
-                width: "6px",
-                height: "6px",
-                animationDuration: "1.5s",
+                animationDelay: "180ms",
+                animationDuration: "1.2s",
+                width: "4px",
+                height: "4px",
               }}
             ></span>
             <span
               className="animate-bounce-dot rounded bg-[var(--icon-tertiary)]"
               style={{
-                animationDelay: "500ms",
-                width: "6px",
-                height: "6px",
-                animationDuration: "1.5s",
+                animationDelay: "360ms",
+                animationDuration: "1.2s",
+                width: "4px",
+                height: "4px",
               }}
             ></span>
           </span>

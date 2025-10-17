@@ -61,13 +61,17 @@ module.exports = {
           to: { height: "0" },
         },
         "bounce-dot": {
-          "0%, 100%": { 
+          "0%, 35%, 100%": {
             transform: "translateY(0)",
             opacity: "0.7"
           },
-          "50%": { 
+          "15%": {
             transform: "translateY(-4px)",
             opacity: "1"
+          },
+          "25%": {
+            transform: "translateY(0)",
+            opacity: "0.9"
           },
         },
       },

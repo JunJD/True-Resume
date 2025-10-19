@@ -12,13 +12,18 @@
     "Browserless",
     "Composio",
     "copilotkit",
+    "graphai",
     "healthcheck",
     "htmldiff",
     "isready",
+    "langchain",
+    "langgraph",
+    "langsmith",
     "Lingui",
     "onblack",
     "paralleldrive",
     "pgsql",
-    "unlocalized"
+    "unlocalized",
+    "wolfi"
   ]
 }

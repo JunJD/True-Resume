@@ -83,6 +83,12 @@ export const configSchema = z.object({
   OPENID_SCOPE: z.string().optional(),
   OPENID_TOKEN_URL: z.string().url().optional(),
   OPENID_USER_INFO_URL: z.string().url().optional(),
+
+  // LangGraph/AI Configuration (Optional)
+  LANGGRAPH_URL: z.string().url().optional(),
+  LANGGRAPH_GRAPH_ID: z.string().optional(),
+  LANGGRAPH_AGENT_ID: z.string().optional(),
+  LANGSMITH_API_KEY: z.string().optional(),
 });
 
 export type Config = z.infer<typeof configSchema>;

@@ -24,7 +24,8 @@
       "@reactive-resume/parser": ["libs/parser/src/index.ts"],
       "@reactive-resume/schema": ["libs/schema/src/index.ts"],
       "@reactive-resume/ui": ["libs/ui/src/index.ts"],
-      "@reactive-resume/utils": ["libs/utils/src/index.ts"]
+      "@reactive-resume/utils": ["libs/utils/src/index.ts"],
+      "@reactive-resume/graphai": ["apps/graphai/src/agent/graph.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "tmp", ".nx"]

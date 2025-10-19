@@ -7,11 +7,14 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
+    "Agentkit",
     "Artboard",
     "azurill",
     "Browserless",
+    "checkpointer",
     "Composio",
     "copilotkit",
+    "DASHSCOPE",
     "graphai",
     "healthcheck",
     "htmldiff",
@@ -23,6 +26,7 @@
     "onblack",
     "paralleldrive",
     "pgsql",
+    "qwen",
     "unlocalized",
     "wolfi"
   ]

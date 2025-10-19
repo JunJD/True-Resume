@@ -6,6 +6,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { RavenInterceptor, RavenModule } from "nest-raven";
 import { ZodValidationPipe } from "nestjs-zod";
 
+import { AgentkitModule } from "./agentkit/agentkit.module";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "./config/config.module";
 import { ContributorsModule } from "./contributors/contributors.module";
@@ -49,6 +50,7 @@ import { UserModule } from "./user/user.module";
       // eslint-disable-next-line unicorn/prefer-module
       rootPath: path.join(__dirname, "..", "client"),
     }),
+    AgentkitModule,
   ],
   providers: [
     {

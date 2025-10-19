@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(document.querySelector("#root")!);
 
 root.render(
   <StrictMode>
-    <CopilotKit publicApiKey="ck_pub_d8873d80a5243413c9bcee4ff182154a">
+    <CopilotKit runtimeUrl="/agentKit" agent="resume_agent">
       <RouterProvider router={router} />
     </CopilotKit>
   </StrictMode>,

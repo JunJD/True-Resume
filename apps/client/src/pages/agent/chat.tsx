@@ -1,8 +1,10 @@
 /* eslint-disable lingui/no-unlocalized-strings */
 import "@copilotkit/react-ui/styles.css";
 
-import { CopilotChat, useCopilotChatSuggestions } from "@copilotkit/react-ui";
+import { useCopilotContext } from "@copilotkit/react-core";
+import { CopilotChat } from "@copilotkit/react-ui";
 import { ScrollArea } from "@reactive-resume/ui";
+import { useEffect } from "react";
 
 import { MakeAssistantMessage } from "@/client/components/agent-ui/make-assistant-message";
 import { MakeInput } from "@/client/components/agent-ui/make-input";
@@ -12,25 +14,23 @@ import { RenderSuggestionsList } from "@/client/components/agent-ui/render-sugge
 import { ToolRenderer } from "@/client/components/agent-ui/tool-renderer";
 import { useResumeActions } from "@/client/hooks/use-resume-actions";
 import { useResumeCopilot } from "@/client/hooks/use-resume-copilot";
-import { useResumeStore } from "@/client/stores/resume";
 
 import { AgentHeader } from "./_components/header";
 
 export function AgentChat() {
-  const resume = useResumeStore((state) => state.resume);
+  const { agentSession, setAgentSession } = useCopilotContext();
+
+  useEffect(() => {
+    if (agentSession?.agentName) {
+      return;
+    }
+
+    setAgentSession({ agentName: "resume_agent" });
+  }, [agentSession?.agentName, setAgentSession]);
 
   useResumeCopilot();
 
   useResumeActions();
-
-  useCopilotChatSuggestions(
-    {
-      instructions: "Suggest the most relevant next actions.",
-      minSuggestions: 1,
-      maxSuggestions: 2,
-    },
-    [resume.data],
-  );
 
   return (
     <div className="flex h-screen flex-col bg-[var(--background-gray-main)]">

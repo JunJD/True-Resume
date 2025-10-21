@@ -153,8 +153,15 @@ export const createInitialRuntimeState = (): RuntimeState => ({
 
 export const AgentStateAnnotation = Annotation.Root({
   ...CopilotKitStateAnnotation.spec,
-  resumeContext: Annotation<ResumeContext>({ default: createInitialResumeContext }),
-  runtime: Annotation<RuntimeState>({ default: createInitialRuntimeState }),
+  // Use LastValue semantics with explicit reducer to satisfy typings
+  resumeContext: Annotation<ResumeContext>({
+    reducer: (_left, right) => right,
+    default: createInitialResumeContext,
+  }),
+  runtime: Annotation<RuntimeState>({
+    reducer: (_left, right) => right,
+    default: createInitialRuntimeState,
+  }),
 });
 
 export type AgentState = typeof AgentStateAnnotation.State;

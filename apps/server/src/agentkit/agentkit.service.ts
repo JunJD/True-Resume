@@ -27,7 +27,6 @@ export class AgentkitService {
   private initializeRuntime() {
     const langgraphUrl = this.configService.get<string>("LANGGRAPH_URL") ?? "";
     const langgraphGraphId = this.configService.get<string>("LANGGRAPH_GRAPH_ID") ?? "agent";
-    const langgraphAgentId = this.configService.get<string>("LANGGRAPH_AGENT_ID");
     const langsmithApiKey = this.configService.get<string>("LANGSMITH_API_KEY");
 
     this.runtime = new CopilotRuntime({
@@ -37,7 +36,6 @@ export class AgentkitService {
           graphId: langgraphGraphId,
           agentName: "resume_agent",
           description: "AI agent for resume optimization and analysis powered by LangGraph",
-          ...(langgraphAgentId ? { agentId: langgraphAgentId } : {}),
           ...(langsmithApiKey ? { langsmithApiKey } : {}),
         }),
       },

@@ -226,11 +226,6 @@ async function ingestNode(state: AgentState, config: RunnableConfig) {
 
   harvest.runtime.currentNode = "ingest_node";
 
-  await emitCoagentState(config, "ingest_node", {
-    resumeContext: harvest.resumeContext,
-    runtime: harvest.runtime,
-  });
-
   return {
     resumeContext: harvest.resumeContext,
     runtime: harvest.runtime,
@@ -389,9 +384,9 @@ async function craftSuggestion(
     } satisfies z.infer<typeof SuggestionSchema>;
   }
 
-  const structuredModel = createChatModel("synthesize", context).withStructuredOutput(
+  const structuredModel = (createChatModel("synthesize", context) as ChatOpenAI).withStructuredOutput(
     SuggestionSchema,
-    { name: "ResumeSuggestion" }
+    { name: "ResumeSuggestion", method: "jsonMode" }
   );
 
   const system = new SystemMessage({
@@ -634,11 +629,11 @@ async function extractSignals(
     return fallbackExtraction(userText);
   }
 
-  const extractor = createChatModel(phase, context).withStructuredOutput(
+  const extractor = (createChatModel(phase, context) as ChatOpenAI).withStructuredOutput(
     ResumeSignalSchema,
     {
       name: "ResumeSignalExtraction",
-      strict: false,
+      method: "jsonMode",
     }
   );
 
@@ -1121,9 +1116,9 @@ async function deriveJDInsights(
     return buildHeuristicJDInsights(jdText);
   }
 
-  const structuredModel = createChatModel("parse_jd", context).withStructuredOutput(
+  const structuredModel = (createChatModel("parse_jd", context) as ChatOpenAI).withStructuredOutput(
     JDInsightsSchema,
-    { name: "JDInsights" }
+    { name: "JDInsights", method: "jsonMode" }
   );
 
   const system = new SystemMessage({

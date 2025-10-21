@@ -6,11 +6,7 @@ import { CopilotChat } from "@copilotkit/react-ui";
 import { ScrollArea } from "@reactive-resume/ui";
 import { useEffect } from "react";
 
-import { MakeAssistantMessage } from "@/client/components/agent-ui/make-assistant-message";
-import { MakeInput } from "@/client/components/agent-ui/make-input";
-import { MarkUserMessage } from "@/client/components/agent-ui/make-user-message";
 import McpServerManager from "@/client/components/agent-ui/mcp-server-manager";
-import { RenderSuggestionsList } from "@/client/components/agent-ui/render-suggestions-list";
 import { ToolRenderer } from "@/client/components/agent-ui/tool-renderer";
 import { useResumeActions } from "@/client/hooks/use-resume-actions";
 import { useResumeCopilot } from "@/client/hooks/use-resume-copilot";
@@ -67,10 +63,10 @@ Render a review card for each change with Accept/Reject options, and apply on Ac
               initial:
                 "Hi! 👋 I'm your resume optimization assistant. I can help you improve your resume's content. What would you like to work on?",
             }}
-            AssistantMessage={MakeAssistantMessage}
-            Input={MakeInput}
-            UserMessage={MarkUserMessage}
-            RenderSuggestionsList={RenderSuggestionsList}
+            // AssistantMessage={MakeAssistantMessage}
+            // Input={MakeInput}
+            // UserMessage={MarkUserMessage}
+            // RenderSuggestionsList={RenderSuggestionsList}
           />
           <ToolRenderer />
         </div>

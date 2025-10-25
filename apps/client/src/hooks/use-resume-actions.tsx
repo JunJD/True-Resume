@@ -1,11 +1,18 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { useCopilotAction } from "@copilotkit/react-core";
+import {
+  useCoAgentStateRender,
+  useCopilotAction,
+  useLangGraphInterrupt,
+} from "@copilotkit/react-core";
 import type { Experience, Project } from "@reactive-resume/schema";
 import { type Template, templatesList } from "@reactive-resume/utils";
 
+import { InputJDCard } from "@/client/components/agent-ui/input-jd-card";
+import { MatchScoreCard } from "@/client/components/agent-ui/match-score-card";
 import { ChangeApprovalCard } from "@/client/components/change-approval-card";
 import { TemplateSelector } from "@/client/components/template-selector";
 
+// import type { AgentState } from "../../../apps/graphai/src/agent/state";
 import { useResumeStore } from "../stores/resume";
 
 export const useResumeActions = () => {
@@ -362,6 +369,33 @@ export const useResumeActions = () => {
           status={status}
         />
       );
+    },
+  });
+
+  useLangGraphInterrupt<string>({
+    render: ({ event, resolve }) => <InputJDCard event={event} resolve={resolve} />,
+    enabled: ({ eventValue, agentMetadata }) => {
+      return (
+        eventValue === "请粘贴你想要面试岗位的招聘信息(JD),我会根据JD优化你的简历" &&
+        agentMetadata.agentName === "resume_agent" &&
+        agentMetadata.nodeName === "analyze_jd_node"
+      );
+    },
+  });
+
+  useCoAgentStateRender({
+    name: "resume_agent",
+    nodeName: "analyze_jd_node",
+    render: ({ state }) => {
+      const score = Number(state.currentScore ?? 0);
+      if (Number.isFinite(score) && score > 0) {
+        const jdPreview =
+          typeof state.jdContent === "string" ? state.jdContent.slice(0, 160) : undefined;
+        return (
+          <MatchScoreCard score={score} jdPreview={jdPreview} breakdown={state.scoreBreakdown} />
+        );
+      }
+      return null;
     },
   });
 };

@@ -27,6 +27,7 @@
     "paralleldrive",
     "pgsql",
     "qwen",
+    "tavily",
     "unlocalized",
     "wolfi"
   ]

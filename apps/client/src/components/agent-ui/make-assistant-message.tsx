@@ -7,6 +7,10 @@ import { Logo } from "../logo";
 export const MakeAssistantMessage: React.FC<AssistantMessageProps> = (props) => {
   const { message, isLoading, isCurrentMessage, isGenerating } = props;
 
+  const stateRender = message?.generativeUI?.();
+
+  if (!stateRender && !message?.content) return null;
+
   return (
     <div>
       <Logo />

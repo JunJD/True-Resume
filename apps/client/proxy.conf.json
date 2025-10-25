@@ -5,6 +5,7 @@
   },
   "/artboard": {
     "target": "http://localhost:6173",
-    "secure": false
+    "secure": false,
+    "ws": true
   }
 }

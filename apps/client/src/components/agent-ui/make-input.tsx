@@ -1,3 +1,4 @@
+import { useCoAgent } from "@copilotkit/react-core";
 import type { InputProps } from "@copilotkit/react-ui";
 import { t } from "@lingui/macro";
 import { PaperPlaneIcon, StopIcon } from "@phosphor-icons/react";
@@ -7,6 +8,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export const MakeInput: React.FC<InputProps> = (props) => {
   const { inProgress, onSend: propOnSend, onStop } = props;
+
+  const { state } = useCoAgent({ name: "resume_agent" });
+  const logs: { message: string; done: boolean }[] = state?.logs ?? [];
 
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -89,6 +93,21 @@ export const MakeInput: React.FC<InputProps> = (props) => {
       )}
       onClick={onClick}
     >
+      {logs.length > 0 ? (
+        <div className="mb-2 space-y-1 text-xs text-gray-500 dark:text-gray-400">
+          {logs.slice(-3).map((l, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "inline-block size-1.5 rounded-full",
+                  l.done ? "bg-emerald-400" : "bg-sky-400",
+                )}
+              />
+              <span className={cn(l.done ? "opacity-70" : "opacity-90")}>{l.message}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
       <div className="relative w-full">
         <motion.div
           layout
